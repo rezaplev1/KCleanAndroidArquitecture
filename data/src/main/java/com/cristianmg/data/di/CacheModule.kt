@@ -9,5 +9,5 @@ val cacheModule = module {
     single {
         Database(AndroidSqliteDriver(Database.Schema, get(), "marvel.db"))
     }
-    single<CharacterCache> { CharacterCache.Database(get()) }
+    single<CharacterCache> { CharacterCache.Database(get(),get()) }
 }

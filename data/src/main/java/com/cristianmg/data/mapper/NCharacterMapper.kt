@@ -10,7 +10,7 @@ class NCharacterMapper : IMapper<NCharacterEntity, CharacterModel> {
         NCharacterEntity(model.id,model.name,DateFormat.toNetworkFormat(model.modified),model.resourceUri)
 
     override fun mapToModel(entity: NCharacterEntity): CharacterModel
-            = CharacterModel(entity.id,entity.name,DateFormat.fromDatabaseFormat(entity.modified),entity.resourceURI)
+            = CharacterModel(entity.id,entity.name,DateFormat.fromNetworkFormat(entity.modified),entity.resourceURI)
 
 
 }

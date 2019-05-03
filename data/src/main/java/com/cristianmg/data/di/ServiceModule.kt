@@ -4,5 +4,5 @@ import com.cristianmg.data.service.CharacterService
 import org.koin.dsl.module
 
 val serviceModule = module {
-    single<CharacterService> { CharacterService.Network() }
+    single<CharacterService> { CharacterService.Network(get()) }
 }

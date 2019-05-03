@@ -15,13 +15,35 @@ android {
     }
 
     buildTypes {
+        debug{
+            buildConfigField("String", "BASEPATH", "\"https://gateway.marvel.com\"")
+            buildConfigField("String", "PRIVATE_API_KEY_MARVEL", "\""+getPrivateKey()+"\"")
+            buildConfigField("String", "PUBLIC_API_KEY_MARVEL", "\""+getPublicKey()+"\"" )
+        }
         release {
+            buildConfigField("String", "BASEPATH",  "\"https://gateway.marvel.com\"")
+            buildConfigField("String", "PRIVATE_API_KEY_MARVEL", "\""+getPrivateKey()+"\"")
+            buildConfigField("String", "PUBLIC_API_KEY_MARVEL", "\""+getPublicKey()+"\"" )
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
 }
+
+def getPublicKey() {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    return properties.getProperty("PUBLIC_API_KEY_MARVEL")
+}
+
+
+def getPrivateKey() {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    return properties.getProperty("PRIVATE_API_KEY_MARVEL")
+}
+
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -34,6 +56,10 @@ dependencies {
     implementation "com.squareup.sqldelight:rxjava2-extensions:1.1.3"
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.5.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.12.1'
+
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
