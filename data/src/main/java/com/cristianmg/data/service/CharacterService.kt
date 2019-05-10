@@ -1,6 +1,22 @@
+/*
+ * Copyright 2019 Jake Wharton
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.cristianmg.data.service
 
-import android.util.Base64
+import com.cristianmg.data.entity.MarvelApiInformation
 import com.cristianmg.data.entity.MarvelPaginateData
 import com.cristianmg.data.entity.MarvelResponseEntity
 import com.cristianmg.data.entity.NCharacterEntity
@@ -8,81 +24,40 @@ import com.cristianmg.data.mapper.NCharacterMapper
 import com.cristianmg.data.model.CharacterModel
 import io.reactivex.Single
 import retrofit2.http.GET
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.http.Query
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import java.math.BigInteger
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
-import android.util.Log
-import com.cristianmg.data.BuildConfig
-
 
 interface CharacterService {
 
     fun characters(): Single<List<CharacterModel>>
 
     class Network(
-        private val mapper: NCharacterMapper
+        private val mapper: NCharacterMapper,
+        private val apiInf: MarvelApiInformation,
+        private val retrofit: Retrofit
     ) : CharacterService {
 
         override fun characters(): Single<List<CharacterModel>> {
-
-            val interceptor = HttpLoggingInterceptor()
-            interceptor.level = HttpLoggingInterceptor.Level.BODY
-            val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
-
-            val retrofit = Retrofit.Builder()
-                .baseUrl(BuildConfig.BASEPATH)
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build()
-
-            val privateApiKey = BuildConfig.PRIVATE_API_KEY_MARVEL
-            val publicApiKey = BuildConfig.PUBLIC_API_KEY_MARVEL
-            val ts = System.currentTimeMillis().toString()
-            val hash = getMd5Hash(ts + privateApiKey + publicApiKey)!!
-
+            val ts = apiInf.ts
             return retrofit.create(NetworkCalls::class.java)
-                .getCharacters(ts, publicApiKey, hash, 0, 1)
+                .getCharacters(ts, apiInf.publicApiKey, apiInf.getHash(ts), 0, 1)
                 .map { it.getDataOrError().results }
                 .map {
                     mapper.mapListToModel(it)
                 }
-
         }
 
-        fun getMd5Hash(input: String): String? {
-            try {
-                val md = MessageDigest.getInstance("MD5")
-                val messageDigest = md.digest(input.toByteArray())
-                val number = BigInteger(1, messageDigest)
-                var md5 = number.toString(16)
-
-                while (md5.length < 32)
-                    md5 = "0$md5"
-
-                return md5
-            } catch (e: NoSuchAlgorithmException) {
-                Log.e("MD5", e.localizedMessage)
-                return null
-            }
-
-        }
 
         interface NetworkCalls {
+
             @GET("/v1/public/characters")
             fun getCharacters(
                 @Query("ts") ts: String,
                 @Query("apikey") apiKey: String,
-                @Query("hash") hash: String, @Query("offset") offset: Int,
+                @Query("hash") hash: String?, @Query("offset") offset: Int,
                 @Query("limit") limit: Int
-            ):
-                    Single<MarvelResponseEntity<MarvelPaginateData<List<NCharacterEntity>>>>
+            ): Single<MarvelResponseEntity<MarvelPaginateData<List<NCharacterEntity>>>>
+
         }
 
     }

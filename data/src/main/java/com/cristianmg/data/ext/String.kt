@@ -14,16 +14,24 @@
  * limitations under the License.
  */
 
-package com.cristianmg.data.mapper
+package com.cristianmg.data.ext
 
-import com.cristianmg.data.DCharacterEntity
-import com.cristianmg.data.ext.DateFormat
-import com.cristianmg.data.model.CharacterModel
+import java.lang.Exception
+import java.math.BigInteger
+import java.security.MessageDigest
 
+fun String.toMd5(): String? {
+    return try {
+        val md = MessageDigest.getInstance("MD5")
+        val messageDigest = md.digest(this.toByteArray())
+        val number = BigInteger(1, messageDigest)
+        var md5 = number.toString(16)
 
-class DCharacterMapper : IMapperSqlDelight<DCharacterEntity, CharacterModel> {
+        while (md5.length < 32)
+            md5 = "0$md5"
 
-    override fun mapToModel(entity: DCharacterEntity): CharacterModel
-            = CharacterModel(entity.id,entity.name,DateFormat.fromDatabaseFormat(entity.modified),entity.resourceURI)
-
+        md5
+    } catch (e: Exception) {
+        null
+    }
 }

@@ -14,16 +14,21 @@
  * limitations under the License.
  */
 
-package com.cristianmg.data.mapper
+package com.cristianmg.data.entity
 
-import com.cristianmg.data.DCharacterEntity
-import com.cristianmg.data.ext.DateFormat
-import com.cristianmg.data.model.CharacterModel
+import com.cristianmg.data.ext.toMd5
 
 
-class DCharacterMapper : IMapperSqlDelight<DCharacterEntity, CharacterModel> {
+data class MarvelApiInformation(
+    val privateApiKey: String,
+    val publicApiKey: String
+) {
+    val ts: String
+        get() {
+            return System.currentTimeMillis().toString()
+        }
 
-    override fun mapToModel(entity: DCharacterEntity): CharacterModel
-            = CharacterModel(entity.id,entity.name,DateFormat.fromDatabaseFormat(entity.modified),entity.resourceURI)
+    fun getHash(ts: String): String? =
+        (ts + privateApiKey + publicApiKey).toMd5()
 
 }
