@@ -14,4 +14,12 @@
  * limitations under the License.
  */
 
-include ':app'
+package com.cristianmg.domain.di
+
+import com.cristianmg.domain.viewmodel.MainViewModel
+import org.koin.android.viewmodel.dsl.viewModel
+import org.koin.dsl.module
+
+val viewModelModule = module {
+    viewModel { MainViewModel() }
+}

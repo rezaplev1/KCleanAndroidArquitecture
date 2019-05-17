@@ -14,4 +14,11 @@
  * limitations under the License.
  */
 
-include ':app'
+package com.cristianmg.sqldelight.data.entity
+
+data class CharacterEntity(
+    val id:Long,
+    val name:String,
+    val modified:String,
+    val resourceURI:String
+)

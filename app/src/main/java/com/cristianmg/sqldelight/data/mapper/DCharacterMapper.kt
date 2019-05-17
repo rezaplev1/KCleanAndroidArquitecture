@@ -14,4 +14,16 @@
  * limitations under the License.
  */
 
-include ':app'
+package com.cristianmg.sqldelight.data.mapper
+
+import com.cristianmg.data.DCharacterEntity
+import com.cristianmg.sqldelight.data.ext.DateFormat
+import com.cristianmg.sqldelight.data.model.CharacterModel
+
+
+class DCharacterMapper : IMapperSqlDelight<DCharacterEntity, CharacterModel> {
+
+    override fun mapToModel(entity: DCharacterEntity): CharacterModel
+            = CharacterModel(entity.id,entity.name,DateFormat.fromDatabaseFormat(entity.modified),entity.resourceURI)
+
+}

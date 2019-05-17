@@ -14,4 +14,11 @@
  * limitations under the License.
  */
 
-include ':app'
+package com.cristianmg.sqldelight.data.di
+
+import com.cristianmg.sqldelight.data.repository.CharacterRepository
+import org.koin.dsl.module
+
+val repositoryModule = module {
+    single<CharacterRepository> { CharacterRepository.CharacterRepositoryImpl(get(), get()) }
+}

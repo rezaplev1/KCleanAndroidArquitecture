@@ -14,4 +14,17 @@
  * limitations under the License.
  */
 
-include ':app'
+package com.cristianmg.domain.ext
+
+import androidx.lifecycle.toLiveData
+import io.reactivex.Flowable
+import io.reactivex.Scheduler
+
+fun <T> Flowable<T>.toResult(scheduler: Scheduler) =
+    this.subscribeOn(scheduler)
+        .map { Result.success(it) }
+        .onErrorReturn { e -> Result.failure(e) }
+
+
+fun <T> Flowable<T>.toResultLiveData(scheduler: Scheduler) =
+    toResult(scheduler).toLiveData()

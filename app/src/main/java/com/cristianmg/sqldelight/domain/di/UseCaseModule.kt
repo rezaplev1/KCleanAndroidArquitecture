@@ -14,4 +14,12 @@
  * limitations under the License.
  */
 
-include ':app'
+package com.cristianmg.sqldelight.domain.di
+
+
+import com.cristianmg.sqldelight.domain.usecase.GetCharacterCase
+import org.koin.dsl.module
+
+val useCaseModule = module {
+    single { GetCharacterCase(get()) }
+}

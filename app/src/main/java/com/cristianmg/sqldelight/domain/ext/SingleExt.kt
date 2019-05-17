@@ -14,4 +14,19 @@
  * limitations under the License.
  */
 
-include ':app'
+package com.cristianmg.sqldelight.domain.ext
+
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.toLiveData
+import io.reactivex.Scheduler
+import io.reactivex.Single
+import com.cristianmg.sqldelight.domain.model.Result
+
+fun <T> Single<T>.toLiveData() = toFlowable().toLiveData()
+
+fun <T> Single<T>.toResult(scheduler: Scheduler): Single<Result<T>> =
+    this.subscribeOn(scheduler)
+        .map { Result.success(it) }
+        .onErrorReturn { Result.failure(it) }
+
+fun <T> Single<T>.toResultLiveData(scheduler: Scheduler): LiveData<Result<T>> = toResult(scheduler).toLiveData()

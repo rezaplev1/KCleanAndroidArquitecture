@@ -14,4 +14,19 @@
  * limitations under the License.
  */
 
-include ':app'
+package com.cristianmg.sqldelight.domain.viewmodel
+
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import com.cristianmg.sqldelight.data.model.CharacterModel
+import com.cristianmg.sqldelight.domain.model.Result
+import com.cristianmg.sqldelight.domain.usecase.GetCharacterCase
+
+
+class MainViewModel(
+    private val getCharacterCase: GetCharacterCase
+) : ViewModel() {
+
+    fun characters(): LiveData<Result<List<CharacterModel>>> = getCharacterCase.buildUseCase()
+
+}

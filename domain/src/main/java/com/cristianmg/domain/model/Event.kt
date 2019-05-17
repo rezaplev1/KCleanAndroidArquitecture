@@ -14,4 +14,6 @@
  * limitations under the License.
  */
 
-include ':app'
+package com.cristianmg.domain.model
+
+class Event()

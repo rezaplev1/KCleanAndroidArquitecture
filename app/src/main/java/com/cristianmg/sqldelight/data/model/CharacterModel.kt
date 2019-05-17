@@ -14,4 +14,13 @@
  * limitations under the License.
  */
 
-include ':app'
+package com.cristianmg.sqldelight.data.model
+
+import java.util.*
+
+data class CharacterModel(
+    val id: Long,
+    val name: String,
+    val modified: Calendar,
+    val resourceURI:String
+)

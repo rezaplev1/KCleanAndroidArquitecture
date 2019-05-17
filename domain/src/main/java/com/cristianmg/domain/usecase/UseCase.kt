@@ -14,4 +14,12 @@
  * limitations under the License.
  */
 
-include ':app'
+package com.cristianmg.domain.usecase
+
+import androidx.lifecycle.LiveData
+
+abstract class UseCase<T> {
+
+    abstract fun buildUseCase(): LiveData<Result<T>>
+
+}

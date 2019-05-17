@@ -14,4 +14,18 @@
  * limitations under the License.
  */
 
-include ':app'
+package com.cristianmg.domain.di
+
+import com.cristianmg.sqldelight.data.di.DataKoinModules
+import org.koin.core.module.Module
+
+class DomainKoinModules {
+
+    companion object {
+        fun getModules(): List<Module> {
+            return mutableListOf(viewModelModule, useCaseModule, viewModelModule).apply {
+                addAll(DataKoinModules.getModules())
+            }
+        }
+    }
+}

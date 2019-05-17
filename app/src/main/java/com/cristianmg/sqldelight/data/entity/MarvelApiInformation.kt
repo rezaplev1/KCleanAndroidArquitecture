@@ -14,4 +14,21 @@
  * limitations under the License.
  */
 
-include ':app'
+package com.cristianmg.sqldelight.data.entity
+
+import com.cristianmg.sqldelight.data.ext.toMd5
+
+
+data class MarvelApiInformation(
+    val privateApiKey: String,
+    val publicApiKey: String
+) {
+    val ts: String
+        get() {
+            return System.currentTimeMillis().toString()
+        }
+
+    fun getHash(ts: String): String? =
+        (ts + privateApiKey + publicApiKey).toMd5()
+
+}

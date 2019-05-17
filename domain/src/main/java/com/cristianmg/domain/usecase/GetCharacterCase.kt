@@ -14,4 +14,19 @@
  * limitations under the License.
  */
 
-include ':app'
+package com.cristianmg.domain.usecase
+
+import androidx.lifecycle.LiveData
+import com.cristianmg.sqldelight.data.model.CharacterModel
+import com.cristianmg.sqldelight.data.repository.CharacterRepository
+import io.reactivex.schedulers.Schedulers
+
+class GetCharacterCase(
+    private val characterRepository: CharacterRepository
+) : UseCase<List<CharacterModel>>() {
+
+    override fun buildUseCase(): LiveData<Result<List<CharacterModel>>> {
+        return characterRepository.characters()
+            .toResultLiveData(Schedulers.io())
+    }
+}

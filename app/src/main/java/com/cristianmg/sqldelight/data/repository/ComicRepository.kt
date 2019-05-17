@@ -14,4 +14,8 @@
  * limitations under the License.
  */
 
-include ':app'
+package com.cristianmg.sqldelight.data.repository
+
+interface ComicRepository {
+
+}

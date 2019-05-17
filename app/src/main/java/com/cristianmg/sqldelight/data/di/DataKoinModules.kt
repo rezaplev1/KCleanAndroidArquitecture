@@ -14,4 +14,15 @@
  * limitations under the License.
  */
 
-include ':app'
+package com.cristianmg.sqldelight.data.di
+
+import org.koin.core.module.Module
+
+class DataKoinModules {
+
+    companion object {
+        fun getModules(): List<Module> {
+            return listOf(cacheModule, mapperModule, repositoryModule, serviceModule)
+        }
+    }
+}

@@ -14,4 +14,12 @@
  * limitations under the License.
  */
 
-include ':app'
+package com.cristianmg.sqldelight.data.entity
+
+data class MarvelPaginateData<T>(
+    val offset:Int,
+    val limit:Int,
+    val total:Int,
+    val count:Int,
+    val results: T
+)

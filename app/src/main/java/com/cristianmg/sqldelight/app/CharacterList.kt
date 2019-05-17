@@ -14,4 +14,22 @@
  * limitations under the License.
  */
 
-include ':app'
+package com.cristianmg.sqldelight.app
+
+import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import com.cristianmg.sqldelight.R
+
+
+class CharacterList : Fragment() {
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_character_list, container, false)
+    }
+}

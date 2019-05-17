@@ -14,4 +14,13 @@
  * limitations under the License.
  */
 
-include ':app'
+package com.cristianmg.sqldelight.domain.usecase
+
+import androidx.lifecycle.LiveData
+import com.cristianmg.sqldelight.domain.model.Result
+
+abstract class UseCase<T> {
+
+    abstract fun buildUseCase(): LiveData<Result<T>>
+
+}

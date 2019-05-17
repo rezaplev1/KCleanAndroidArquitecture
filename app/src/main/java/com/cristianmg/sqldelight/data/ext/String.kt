@@ -14,4 +14,24 @@
  * limitations under the License.
  */
 
-include ':app'
+package com.cristianmg.sqldelight.data.ext
+
+import java.lang.Exception
+import java.math.BigInteger
+import java.security.MessageDigest
+
+fun String.toMd5(): String? {
+    return try {
+        val md = MessageDigest.getInstance("MD5")
+        val messageDigest = md.digest(this.toByteArray())
+        val number = BigInteger(1, messageDigest)
+        var md5 = number.toString(16)
+
+        while (md5.length < 32)
+            md5 = "0$md5"
+
+        md5
+    } catch (e: Exception) {
+        null
+    }
+}

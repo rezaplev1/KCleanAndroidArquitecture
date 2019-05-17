@@ -14,4 +14,13 @@
  * limitations under the License.
  */
 
-include ':app'
+package com.cristianmg.sqldelight.data.di
+
+import com.cristianmg.sqldelight.data.mapper.DCharacterMapper
+import com.cristianmg.sqldelight.data.mapper.NCharacterMapper
+import org.koin.dsl.module
+
+val mapperModule = module {
+    single { DCharacterMapper() }
+    single { NCharacterMapper() }
+}

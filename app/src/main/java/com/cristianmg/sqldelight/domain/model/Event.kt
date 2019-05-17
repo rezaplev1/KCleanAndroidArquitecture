@@ -14,4 +14,6 @@
  * limitations under the License.
  */
 
-include ':app'
+package com.cristianmg.sqldelight.domain.model
+
+class Event()

@@ -17,10 +17,11 @@
 package com.cristianmg.sqldelight
 
 import android.app.Application
-import com.cristianmg.data.di.DataKoinModules
+import com.cristianmg.sqldelight.app.di.AppKoinModules
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
+import timber.log.Timber
 
 class App : Application(){
 
@@ -32,9 +33,12 @@ class App : Application(){
             // declare used Android context
             androidLogger()
             androidContext(this@App)
-            // declare modules
+            modules(AppKoinModules.getModules())
+        }
 
-            modules(DataKoinModules.getModules())
+
+        if(BuildConfig.DEBUG){
+            Timber.plant(Timber.DebugTree())
         }
 
     }

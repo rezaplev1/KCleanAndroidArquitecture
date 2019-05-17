@@ -14,4 +14,18 @@
  * limitations under the License.
  */
 
-include ':app'
+package com.cristianmg.sqldelight.domain.ext
+
+import androidx.lifecycle.toLiveData
+import io.reactivex.Maybe
+import io.reactivex.Scheduler
+import com.cristianmg.sqldelight.domain.model.Result
+
+fun <T> Maybe<T>.toResult(scheduler: Scheduler) =
+    this.subscribeOn(scheduler)
+        .map { Result.success(it) }
+        .onErrorReturn { e -> Result.failure(e) }
+
+fun <T> Maybe<T>.toLiveData() = toFlowable().toLiveData()
+
+fun <T> Maybe<T>.toResultLiveData(scheduler: Scheduler) = toResult(scheduler).toLiveData()
