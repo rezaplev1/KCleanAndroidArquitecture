@@ -41,6 +41,7 @@ Although I try to follow my way to make this project,  I´ve taken some ideas of
 https://github.com/android10/Android-CleanArchitecture-Kotlin
 
 
-
+Example how to create a pagination network + database
+https://github.com/googlesamples/android-architecture-components/blob/master/PagingWithNetworkSample
 
 
