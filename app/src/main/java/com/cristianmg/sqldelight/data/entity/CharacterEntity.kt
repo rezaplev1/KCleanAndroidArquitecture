@@ -17,8 +17,8 @@
 package com.cristianmg.sqldelight.data.entity
 
 data class CharacterEntity(
-    val id:Long,
-    val name:String,
-    val modified:String,
-    val resourceURI:String
+    val id: Long,
+    val name: String,
+    val modified: String,
+    val resourceURI: String
 )

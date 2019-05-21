@@ -16,6 +16,7 @@
 
 package com.cristianmg.sqldelight.data.di
 
+import android.content.Context
 import com.cristianmg.sqldelight.Database
 import com.cristianmg.sqldelight.data.cache.CharacterCache
 import com.squareup.sqldelight.android.AndroidSqliteDriver
@@ -25,5 +26,7 @@ val cacheModule = module {
     single {
         Database(AndroidSqliteDriver(Database.Schema, get(), "marvel.db"))
     }
-    single<CharacterCache> { CharacterCache.Database(get(),get()) }
+    single<CharacterCache> {
+        CharacterCache.Database(get())
+    }
 }

@@ -20,5 +20,7 @@ import com.cristianmg.sqldelight.data.repository.CharacterRepository
 import org.koin.dsl.module
 
 val repositoryModule = module {
-    single<CharacterRepository> { CharacterRepository.CharacterRepositoryImpl(get(), get()) }
+    single<CharacterRepository> {
+        CharacterRepository.CharacterRepositoryImpl(get(), get(), get(), get())
+    }
 }

@@ -16,17 +16,40 @@
 
 package com.cristianmg.sqldelight.domain.viewmodel
 
-import androidx.lifecycle.LiveData
+
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.Transformations.map
 import androidx.lifecycle.ViewModel
-import com.cristianmg.sqldelight.data.model.CharacterModel
-import com.cristianmg.sqldelight.domain.model.Result
-import com.cristianmg.sqldelight.domain.usecase.GetCharacterCase
+import com.cristianmg.sqldelight.data.repository.CharacterRepository
 
 
 class MainViewModel(
-    private val getCharacterCase: GetCharacterCase
+    private val characterRepository: CharacterRepository
 ) : ViewModel() {
 
-    fun characters(): LiveData<Result<List<CharacterModel>>> = getCharacterCase.buildUseCase()
+
+    private val update = MutableLiveData<String>()
+
+    private val repoResult =
+        map(update) {
+            characterRepository.listingCharacter()
+        }
+
+    val characterPages = Transformations.switchMap(repoResult) { it.pagedList }!!
+    val networkState = Transformations.switchMap(repoResult) { it.networkState }!!
+    val refreshState = Transformations.switchMap(repoResult) { it.refreshState }!!
+
+
+    fun characters() = characterRepository.listingCharacter()
+
+    fun retry() {
+
+    }
+
+    fun updateCharacters() {
+        update.value = ""
+    }
+
 
 }

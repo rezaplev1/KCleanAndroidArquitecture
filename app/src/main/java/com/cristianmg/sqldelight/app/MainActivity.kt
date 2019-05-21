@@ -18,40 +18,20 @@ package com.cristianmg.sqldelight.app
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.lifecycle.Observer
-import com.cristianmg.sqldelight.domain.viewmodel.MainViewModel
+import androidx.databinding.DataBindingUtil
 import com.cristianmg.sqldelight.R
-import com.cristianmg.sqldelight.domain.model.ResultObserver
-import org.koin.android.viewmodel.ext.android.viewModel
-import timber.log.Timber
-import java.lang.IllegalStateException
+import com.cristianmg.sqldelight.databinding.ActivityMainBinding
+
 
 class MainActivity : AppCompatActivity() {
 
-    private val viewModel: MainViewModel by viewModel()
+    lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding =  DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.lifecycleOwner = this
 
-
-        val resultFailure = Result.failure<String>(IllegalStateException())
-        val resultSucces = Result.success("")
-
-
-
-        viewModel.characters().observe(this, Observer {
-            Timber.d("")
-        })
-
-        //viewModel.characters().observe(this,ResultObserver{})
-
-       /* ResultObserver(
-            {
-                Timber.d("List received")
-            },{
-
-            }*/
-
+        supportFragmentManager.beginTransaction().replace(R.id.flContent, CharacterList()).commit()
     }
 }

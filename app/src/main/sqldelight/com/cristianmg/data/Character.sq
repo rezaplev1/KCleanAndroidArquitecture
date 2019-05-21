@@ -18,3 +18,17 @@ insert:
 INSERT INTO DCharacterEntity(id,name,modified,resourceURI)
 VALUES (?,?, ?,?);
 
+countCharacters:
+SELECT count(*) FROM DCharacterEntity;
+
+getByPage:
+SELECT *
+FROM DCharacterEntity
+LIMIT :limit OFFSET :offset;
+
+deleteAll:
+DELETE
+FROM DCharacterEntity;
+
+
+

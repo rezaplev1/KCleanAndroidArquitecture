@@ -23,26 +23,26 @@ import com.cristianmg.sqldelight.data.entity.CharacterEntity
 import com.cristianmg.sqldelight.data.mapper.NCharacterMapper
 import com.cristianmg.sqldelight.data.model.CharacterModel
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import retrofit2.http.GET
 import retrofit2.Retrofit
 import retrofit2.http.Query
 
 interface CharacterService {
 
-    fun characters(): Single<List<CharacterModel>>
+    fun characters(offset: Int, sizePage: Int): Single<List<CharacterEntity>>
 
     class Network(
-        private val mapper: NCharacterMapper,
         private val apiInf: MarvelApiInformation,
         private val retrofit: Retrofit
     ) : CharacterService {
 
-        override fun characters(): Single<List<CharacterModel>> {
+        override fun characters(offset: Int, sizePage: Int): Single<List<CharacterEntity>> {
             val ts = apiInf.ts
             return retrofit.create(NetworkCalls::class.java)
-                .getCharacters(ts, apiInf.publicApiKey, apiInf.getHash(ts), 0, 1)
+                .getCharacters(ts, apiInf.publicApiKey, apiInf.getHash(ts), offset, sizePage)
+                .subscribeOn(Schedulers.io())
                 .map { it.getDataOrError().results }
-                .map { mapper.mapListToModel(it) }
         }
 
 

@@ -53,7 +53,7 @@ class ResultObserverTest {
     }
 
     /**
-     * Check if Result observer with flag onshot only emmit one item
+     * Check result observer with flag oneShot only emmit one item
      * **/
     @Test
     fun observerSuccessWithOneShotFlagTest() {

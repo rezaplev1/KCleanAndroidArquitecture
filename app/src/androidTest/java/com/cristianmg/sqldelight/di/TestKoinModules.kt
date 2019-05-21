@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 
-package com.cristianmg.sqldelight.domain.di
+package com.cristianmg.sqldelight.di
 
+import com.cristianmg.sqldelight.app.di.AppKoinModules
+import org.koin.core.module.Module
 
-import org.koin.dsl.module
+class TestKoinModules {
 
-val useCaseModule = module {
-
-
+    companion object {
+        fun getModules(): List<Module> {
+            return mutableListOf<Module>().apply {
+                addAll(AppKoinModules.getModules())
+            }
+        }
+    }
 }

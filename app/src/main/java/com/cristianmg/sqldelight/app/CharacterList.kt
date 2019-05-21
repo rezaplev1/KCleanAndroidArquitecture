@@ -21,10 +21,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.cristianmg.sqldelight.R
+import com.cristianmg.sqldelight.domain.viewmodel.MainViewModel
+import kotlinx.android.synthetic.main.fragment_character_list.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class CharacterList : Fragment() {
+
+    private val viewModel: MainViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,4 +41,30 @@ class CharacterList : Fragment() {
     ): View? {
         return inflater.inflate(R.layout.fragment_character_list, container, false)
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initAdapter()
+    }
+
+    private fun initAdapter() {
+        val adapter = CharacterAdapter {
+            viewModel.retry()
+        }
+        rvCharacters.layoutManager = LinearLayoutManager(context!!, RecyclerView.VERTICAL, false)
+        rvCharacters.adapter = adapter
+
+        viewModel.characterPages
+            .observe(this, Observer {
+                adapter.submitList(it)
+            })
+
+
+        viewModel.networkState.observe(this, Observer {
+            adapter.setNetworkState(it)
+        })
+
+        viewModel.updateCharacters()
+    }
+
 }

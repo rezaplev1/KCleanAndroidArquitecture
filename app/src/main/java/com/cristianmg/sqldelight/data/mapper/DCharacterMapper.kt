@@ -23,7 +23,10 @@ import com.cristianmg.sqldelight.data.model.CharacterModel
 
 class DCharacterMapper : IMapperSqlDelight<DCharacterEntity, CharacterModel> {
 
-    override fun mapToModel(entity: DCharacterEntity): CharacterModel
-            = CharacterModel(entity.id,entity.name,DateFormat.fromDatabaseFormat(entity.modified),entity.resourceURI)
+    override fun mapToEntity(model: CharacterModel): DCharacterEntity  =
+        DCharacterEntity.Impl(model.id, model.name, DateFormat.toDatabaseFormat(model.modified), model.resourceURI)
+
+    override fun mapToModel(entity: DCharacterEntity): CharacterModel =
+        CharacterModel(entity.id, entity.name, DateFormat.fromDatabaseFormat(entity.modified), entity.resourceURI)
 
 }
