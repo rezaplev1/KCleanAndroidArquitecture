@@ -16,12 +16,10 @@
 
 package com.cristianmg.sqldelight.data.service
 
-import com.cristianmg.sqldelight.data.entity.MarvelApiInformation
-import com.cristianmg.sqldelight.data.entity.MarvelPaginateData
+import com.cristianmg.sqldelight.data.entity.MarvelApiInformationEntity
+import com.cristianmg.sqldelight.data.entity.MarvelPaginateDataEntity
 import com.cristianmg.sqldelight.data.entity.MarvelResponseEntity
 import com.cristianmg.sqldelight.data.entity.CharacterEntity
-import com.cristianmg.sqldelight.data.mapper.NCharacterMapper
-import com.cristianmg.sqldelight.data.model.CharacterModel
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import retrofit2.http.GET
@@ -33,14 +31,14 @@ interface CharacterService {
     fun characters(offset: Int, sizePage: Int): Single<List<CharacterEntity>>
 
     class Network(
-        private val apiInf: MarvelApiInformation,
+        private val apiInf: MarvelApiInformationEntity,
         private val retrofit: Retrofit
     ) : CharacterService {
 
         override fun characters(offset: Int, sizePage: Int): Single<List<CharacterEntity>> {
             val ts = apiInf.ts
             return retrofit.create(NetworkCalls::class.java)
-                .getCharacters(ts, apiInf.publicApiKey, apiInf.getHash(ts), offset, sizePage)
+                .getCharacters(ts, apiInf.publicApiKey, apiInf.getHash(ts), offset, sizePage,"modified")
                 .subscribeOn(Schedulers.io())
                 .map { it.getDataOrError().results }
         }
@@ -53,8 +51,8 @@ interface CharacterService {
                 @Query("ts") ts: String,
                 @Query("apikey") apiKey: String,
                 @Query("hash") hash: String?, @Query("offset") offset: Int,
-                @Query("limit") limit: Int
-            ): Single<MarvelResponseEntity<MarvelPaginateData<List<CharacterEntity>>>>
+                @Query("limit") limit: Int,@Query("orderBy") orderBy:String
+            ): Single<MarvelResponseEntity<MarvelPaginateDataEntity<List<CharacterEntity>>>>
 
         }
 

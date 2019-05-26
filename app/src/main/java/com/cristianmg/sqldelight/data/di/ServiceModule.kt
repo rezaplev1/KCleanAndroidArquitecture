@@ -17,7 +17,7 @@
 package com.cristianmg.sqldelight.data.di
 
 import com.cristianmg.sqldelight.BuildConfig
-import com.cristianmg.sqldelight.data.entity.MarvelApiInformation
+import com.cristianmg.sqldelight.data.entity.MarvelApiInformationEntity
 import com.cristianmg.sqldelight.data.service.CharacterService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -33,7 +33,7 @@ val serviceModule = module {
     single {
         val privateApiKey = BuildConfig.PRIVATE_API_KEY_MARVEL
         val publicApiKey = BuildConfig.PUBLIC_API_KEY_MARVEL
-        MarvelApiInformation(privateApiKey, publicApiKey)
+        MarvelApiInformationEntity(privateApiKey, publicApiKey)
     }
 
     single<Retrofit> {

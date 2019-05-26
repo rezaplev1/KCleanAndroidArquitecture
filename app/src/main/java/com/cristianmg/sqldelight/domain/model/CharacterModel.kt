@@ -14,11 +14,16 @@
  * limitations under the License.
  */
 
-package com.cristianmg.sqldelight.data.di
+package com.cristianmg.sqldelight.domain.model
 
-import com.cristianmg.sqldelight.data.mapper.CharacterMapper
-import org.koin.dsl.module
+import com.cristianmg.sqldelight.data.entity.ComicInfoEntity
+import java.util.*
 
-val mapperModule = module {
-    single { CharacterMapper() }
-}
+data class CharacterModel(
+    val id: Long,
+    val name: String,
+    val modified: Calendar,
+    val thumbnail: ThumbnailModel,
+    val resourceURI: String,
+    val comics: List<ComicInfoEntity>
+)

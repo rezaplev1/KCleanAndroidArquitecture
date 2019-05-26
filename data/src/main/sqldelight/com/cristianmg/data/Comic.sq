@@ -1,7 +1,0 @@
-CREATE TABLE DComicEntity (
-  	name TEXT NOT NULL,
-  	resourceURI	INTEGER NOT NULL,
-  	id_character	INTEGER NOT NULL,
-  	PRIMARY KEY(name),
-  	FOREIGN KEY(id_character) REFERENCES DCharacterEntity(id)
-  );

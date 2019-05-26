@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-package com.cristianmg.sqldelight.data.di
+package com.cristianmg.sqldelight.domain.model
 
-import com.cristianmg.sqldelight.data.mapper.CharacterMapper
-import org.koin.dsl.module
-
-val mapperModule = module {
-    single { CharacterMapper() }
-}
+data class ComicInfoModel(
+    val resourceURI:String,
+    val name:String
+)

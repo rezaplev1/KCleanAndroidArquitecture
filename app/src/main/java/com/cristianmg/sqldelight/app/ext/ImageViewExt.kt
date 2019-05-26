@@ -14,11 +14,18 @@
  * limitations under the License.
  */
 
-package com.cristianmg.sqldelight.data.di
+package com.cristianmg.sqldelight.app.ext
 
-import com.cristianmg.sqldelight.data.mapper.CharacterMapper
-import org.koin.dsl.module
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.databinding.BindingAdapter
+import com.bumptech.glide.Glide
+import com.cristianmg.sqldelight.R
 
-val mapperModule = module {
-    single { CharacterMapper() }
+@BindingAdapter("imageUrl")
+fun loadImage(view: AppCompatImageView, url: String?) {
+    url?.let {
+        Glide.with(view.context).load(url).into(view)
+    }?:run{
+        view.setBackgroundResource(R.drawable.ic_error_image_not_found)
+    }
 }

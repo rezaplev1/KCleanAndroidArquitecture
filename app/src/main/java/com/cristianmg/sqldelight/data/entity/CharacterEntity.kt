@@ -13,12 +13,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.cristianmg.sqldelight.data.entity
 
-data class CharacterEntity(
-    val id: Long,
-    val name: String,
-    val modified: String,
-    val resourceURI: String
+import androidx.room.*
+import com.google.gson.annotations.SerializedName
+
+
+@Entity(
+    tableName = "character",
+    indices = [Index("id")]
 )
+data class CharacterEntity(
+
+    @PrimaryKey
+    @ColumnInfo(name = "id")
+    @SerializedName("id")
+    val id: Long,
+
+    @ColumnInfo(name = "name")
+    @SerializedName("name")
+    val name: String,
+
+    @ColumnInfo(name = "modified")
+    @SerializedName("modified")
+    val modified: String,
+
+    @Embedded
+    @SerializedName("thumbnail")
+    val thumbnail: ThumbnailEntity,
+
+    @ColumnInfo(name = "resourceURI")
+    @SerializedName("resourceURI")
+    val resourceURI: String,
+
+    @Ignore
+    @SerializedName("comics")
+    val comics: ComicInfoEntity? = null
+) {
+
+    constructor(id: Long, name: String, modified: String, thumbnail: ThumbnailEntity, resourceURI: String)
+            : this(
+        id, name, modified, thumbnail, resourceURI, null
+    )
+}

@@ -19,9 +19,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="character"
-            type="com.cristianmg.sqldelight.data.model.CharacterModel" />
+            type="com.cristianmg.sqldelight.domain.model.CharacterModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,57 +30,35 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/score"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="55" />
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/thumbnail"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            app:imageUrl="@{character.thumbnail.getPortraitXLarge()}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/title"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_menu_gallery" />
+            tools:src="@drawable/ic_error_image_not_found" />
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/characterTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
+            android:background="@color/color2"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:lines="2"
+            android:maxLines="2"
+            android:text="@{character.name}"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-            app:layout_constraintEnd_toStartOf="@+id/thumbnail"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/score"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="this is a post title\n and might be multiple lines" />
+            android:textColor="@color/color1"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/thumbnail"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <TextView
-            android:id="@+id/subtitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/thumbnail"
-            app:layout_constraintStart_toEndOf="@+id/score"
-            app:layout_constraintTop_toBottomOf="@id/title"
-            tools:text="submitted by foo" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -14,11 +14,29 @@
  * limitations under the License.
  */
 
-package com.cristianmg.sqldelight.data.di
+package com.cristianmg.sqldelight.data.cache
 
-import com.cristianmg.sqldelight.data.mapper.CharacterMapper
-import org.koin.dsl.module
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.koin.test.KoinTest
+import org.koin.test.inject
 
-val mapperModule = module {
-    single { CharacterMapper() }
+@RunWith(AndroidJUnit4::class)
+class CharacterDaoTest : KoinTest {
+
+    val dao: CharacterDao by inject()
+
+    @Before
+    fun before() {
+        //loadKoinModules(cacheModule)
+    }
+
+
+    @Test
+    fun testTest() {
+        dao.characters().test().assertComplete()
+    }
+
 }

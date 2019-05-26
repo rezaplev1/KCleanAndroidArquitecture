@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.cristianmg.sqldelight.data.di
+package com.cristianmg.sqldelight.data.entity
 
-import com.cristianmg.sqldelight.data.mapper.CharacterMapper
-import org.koin.dsl.module
-
-val mapperModule = module {
-    single { CharacterMapper() }
-}
+data class MarvelPaginateDataEntity<T>(
+    val offset:Int,
+    val limit:Int,
+    val total:Int,
+    val count:Int,
+    val results: T
+)

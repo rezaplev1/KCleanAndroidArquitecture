@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import com.cristianmg.sqldelight.R
+import com.cristianmg.sqldelight.app.characters.CharacterListFragment
 import com.cristianmg.sqldelight.databinding.ActivityMainBinding
 
 
@@ -32,6 +33,8 @@ class MainActivity : AppCompatActivity() {
         binding =  DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
 
-        supportFragmentManager.beginTransaction().replace(R.id.flContent, CharacterList()).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.flContent,
+            CharacterListFragment()
+        ).commit()
     }
 }

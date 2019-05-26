@@ -16,105 +16,43 @@
 
 package com.cristianmg.sqldelight.data.repository
 
-import android.annotation.SuppressLint
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.paging.toLiveData
-import com.cristianmg.sqldelight.app.CharacterBoundayCallback
-import com.cristianmg.sqldelight.data.cache.CharacterCache
-import com.cristianmg.sqldelight.data.mapper.DCharacterMapper
-import com.cristianmg.sqldelight.data.mapper.NCharacterMapper
-import com.cristianmg.sqldelight.data.model.CharacterModel
+import androidx.paging.DataSource
+import com.cristianmg.sqldelight.data.cache.CharacterDao
+import com.cristianmg.sqldelight.data.mapper.CharacterMapper
+import com.cristianmg.sqldelight.domain.model.CharacterModel
 import com.cristianmg.sqldelight.data.service.CharacterService
-import com.cristianmg.sqldelight.domain.model.NetworkState
 import io.reactivex.Completable
 import io.reactivex.Single
-import io.reactivex.rxkotlin.subscribeBy
-import java.util.concurrent.Executors
 
 interface CharacterRepository {
 
-    companion object {
-        const val SIZE_PAGE = 5
-    }
-
-    fun listingCharacter(): Listing<CharacterModel>
-    fun character(offset: Int): Single<List<CharacterModel>>
+    fun character(offset: Int,pageSize:Int): Single<List<CharacterModel>>
     fun insertAll(list: List<CharacterModel>): Completable
+    fun getDataSourceCharacters(): DataSource.Factory<Int, CharacterModel>
+    fun removeAll(): Completable
 
     open class CharacterRepositoryImpl(
         private val service: CharacterService,
-        private val dMapper: DCharacterMapper,
-        private val nMapper: NCharacterMapper,
-        private val cache: CharacterCache
+        private val mapper: CharacterMapper,
+        private val dao: CharacterDao
     ) : CharacterRepository {
 
+        override fun removeAll(): Completable = dao.deleteAll()
 
-        override fun listingCharacter(): Listing<CharacterModel> {
-            val boundaryCallback = CharacterBoundayCallback(
-                this,
-                Executors.newSingleThreadExecutor(), SIZE_PAGE
-            )
-
-            // we are using a mutable live data to trigger refresh requests which eventually calls
-            // refresh method and gets a new live data. Each refresh request by the user becomes a newly
-            // dispatched data in refreshTrigger
-            val refreshTrigger = MutableLiveData<Unit>()
-            val refreshState = Transformations.switchMap(refreshTrigger) {
-                refreshCharacter()
-            }
-
-            // We use toLiveData Kotlin extension function here, you could also use LivePagedListBuilder
-            val livePagedList = cache.observeCharacters()
-                .map { dMapper.mapToModel(it) }
-                .toLiveData(
-                    pageSize = SIZE_PAGE,
-                    boundaryCallback = boundaryCallback
-                )
-
-            return Listing(
-                pagedList = livePagedList,
-                networkState = boundaryCallback.networkState,
-                retry = {
-                    boundaryCallback.helper.retryAllFailed()
-                },
-                refresh = {
-                    refreshTrigger.value = null
-                },
-                refreshState = refreshState
-            )
-
+        override fun getDataSourceCharacters(): DataSource.Factory<Int, CharacterModel> {
+            return dao.getAllPaged()
+                .map { mapper.mapToModel(it) }
         }
 
         override fun insertAll(list: List<CharacterModel>): Completable =
-            cache.insertAll(dMapper.mapListToEntity(list))
+            dao.insertAll(mapper.mapListToEntity(list))
 
-        override fun character(offset: Int): Single<List<CharacterModel>> =
-            service.characters(offset, SIZE_PAGE)
+        override fun character(offset: Int,pageSize:Int): Single<List<CharacterModel>> =
+            service.characters(offset, pageSize)
                 .map {
-                    nMapper.mapListToModel(it)
+                    mapper.mapListToModel(it)
                 }
 
-
-        @SuppressLint("CheckResult")
-        fun refreshCharacter(): LiveData<NetworkState> {
-            val networkState = MutableLiveData<NetworkState>()
-            networkState.value = NetworkState.LOADING
-            service.characters(0, SIZE_PAGE)
-                .flatMapCompletable {
-                    cache.deleteAllAndInsertNews(dMapper.mapListToEntity(nMapper.mapListToModel(it)))
-                }
-                .subscribeBy(
-                    onComplete = {
-                        networkState.postValue(NetworkState.LOADED)
-                    },
-                    onError = {
-                        networkState.value = NetworkState.error(it.message)
-                    }
-                )
-            return networkState
-        }
     }
 
 }

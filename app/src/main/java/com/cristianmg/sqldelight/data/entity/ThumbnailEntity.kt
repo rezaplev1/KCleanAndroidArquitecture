@@ -14,11 +14,27 @@
  * limitations under the License.
  */
 
-package com.cristianmg.sqldelight.data.di
+package com.cristianmg.sqldelight.data.entity
 
-import com.cristianmg.sqldelight.data.mapper.CharacterMapper
-import org.koin.dsl.module
+import androidx.room.*
+import androidx.room.ForeignKey.CASCADE
+import com.google.gson.annotations.SerializedName
 
-val mapperModule = module {
-    single { CharacterMapper() }
-}
+
+/*@Entity(
+    tableName = "thumbnail",
+    foreignKeys = [ForeignKey(
+        entity = CharacterEntity::class,
+        parentColumns = ["id"],
+        childColumns = ["id"],
+        onDelete = CASCADE
+    )],
+    indices = [Index("id")]
+)*/
+data class ThumbnailEntity(
+
+    @SerializedName("path")
+    val path: String,
+    @SerializedName("extension")
+    val extension: String
+)

@@ -14,11 +14,21 @@
  * limitations under the License.
  */
 
-package com.cristianmg.sqldelight.data.di
+package com.cristianmg.sqldelight.data.entity
 
-import com.cristianmg.sqldelight.data.mapper.CharacterMapper
-import org.koin.dsl.module
+import com.cristianmg.sqldelight.data.ext.toMd5
 
-val mapperModule = module {
-    single { CharacterMapper() }
+
+data class MarvelApiInformationEntity(
+    val privateApiKey: String,
+    val publicApiKey: String
+) {
+    val ts: String
+        get() {
+            return System.currentTimeMillis().toString()
+        }
+
+    fun getHash(ts: String): String? =
+        (ts + privateApiKey + publicApiKey).toMd5()
+
 }

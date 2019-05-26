@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
   ~ Copyright (C) 2017 The Android Open Source Project
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,30 +15,56 @@
   ~ limitations under the License.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="8dp">
+<layout>
 
-    <TextView
-        android:id="@+id/error_msg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal" />
+    <data>
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        style="?android:attr/progressBarStyle"
+        <import type="com.cristianmg.sqldelight.domain.model.NetworkState" />
+
+        <import type="android.view.View" />
+
+        <import type="com.cristianmg.sqldelight.domain.model.Status" />
+
+        <variable
+            name="networkState"
+            type="com.cristianmg.sqldelight.domain.model.NetworkState" />
+
+        <variable
+            name="retryListener"
+            type="android.view.View.OnClickListener" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:orientation="vertical"
+        android:padding="8dp">
 
-    <Button
-        android:id="@+id/retry_button"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Retry" />
-</LinearLayout>
+        <TextView
+            android:id="@+id/error_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@{networkState.msg}"
+            android:visibility="@{networkState.status == Status.FAILED ? View.VISIBLE  :View.INVISIBLE}" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="@{networkState.status == Status.RUNNING ? View.VISIBLE  :View.INVISIBLE}" />
+
+        <Button
+            android:id="@+id/retry_button"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Retry"
+            android:onClick="@{retryListener}"
+            android:visibility="@{networkState.status == Status.FAILED ? View.VISIBLE  :View.INVISIBLE}" />
+    </LinearLayout>
+
+</layout>

@@ -21,6 +21,6 @@ import org.koin.dsl.module
 
 val repositoryModule = module {
     single<CharacterRepository> {
-        CharacterRepository.CharacterRepositoryImpl(get(), get(), get(), get())
+        CharacterRepository.CharacterRepositoryImpl(get(), get(), get())
     }
 }

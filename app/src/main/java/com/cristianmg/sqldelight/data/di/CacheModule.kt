@@ -15,18 +15,13 @@
  */
 
 package com.cristianmg.sqldelight.data.di
-
-import android.content.Context
-import com.cristianmg.sqldelight.Database
-import com.cristianmg.sqldelight.data.cache.CharacterCache
-import com.squareup.sqldelight.android.AndroidSqliteDriver
+import com.cristianmg.sqldelight.data.cache.AppDatabase
+import com.cristianmg.sqldelight.data.cache.CharacterDao
 import org.koin.dsl.module
 
 val cacheModule = module {
+
     single {
-        Database(AndroidSqliteDriver(Database.Schema, get(), "marvel.db"))
-    }
-    single<CharacterCache> {
-        CharacterCache.Database(get())
+        AppDatabase.getInstance(get()).characterDAO()
     }
 }

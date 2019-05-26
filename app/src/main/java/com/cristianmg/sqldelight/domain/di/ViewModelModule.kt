@@ -16,7 +16,7 @@
 
 package com.cristianmg.sqldelight.domain.di
 
-import com.cristianmg.sqldelight.domain.viewmodel.MainViewModel
+import com.cristianmg.sqldelight.app.characters.MainViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
