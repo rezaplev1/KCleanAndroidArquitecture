@@ -23,8 +23,7 @@ This keys can get in marvel developer
 https://developer.marvel.com/
 
 
-
-##Interesting links Android architecture.
+### Interesting links of Android architecture.
 
 Jose Alcérreca talking about the transformations Livedata and the problem of event.
 https://medium.com/androiddevelopers/livedata-with-snackbar-navigation-and-other-events-the-singleliveevent-case-ac2622673150
