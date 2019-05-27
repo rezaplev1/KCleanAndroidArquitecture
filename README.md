@@ -37,4 +37,6 @@ https://github.com/android10/Android-CleanArchitecture-Kotlin
 Example how to create a pagination network + database
 https://github.com/googlesamples/android-architecture-components/blob/master/PagingWithNetworkSample
 
+Dependency graph
+https://github.com/alexzaitsev/apk-dependency-graph
 
