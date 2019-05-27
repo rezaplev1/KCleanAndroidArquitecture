@@ -24,22 +24,16 @@ https://developer.marvel.com/
 
 
 
-
-Interesting articles or architecture Android.
+##Interesting links Android architecture.
 
 Jose Alcérreca talking about the transformations Livedata and the problem of event.
-
 https://medium.com/androiddevelopers/livedata-with-snackbar-navigation-and-other-events-the-singleliveevent-case-ac2622673150
 
 Cristophe Beyls talking about how to reduce Parcelable boilerplate code in Kotlin.
-
 https://medium.com/@BladeCoder/reducing-parcelable-boilerplate-code-using-kotlin-741c3124a49a
 
 Android-CleanArchitecture-Kotlin
-
-Although I try to follow my way to make this project,  I´ve taken some ideas of this project.
 https://github.com/android10/Android-CleanArchitecture-Kotlin
-
 
 Example how to create a pagination network + database
 https://github.com/googlesamples/android-architecture-components/blob/master/PagingWithNetworkSample
