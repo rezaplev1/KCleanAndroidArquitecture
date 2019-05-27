@@ -11,7 +11,7 @@ The requirements are to create a project with pattern MVVM, using Jetpack librar
 
 In this project, I create an example using the marvel developer API to create an App that shows a list and detail that different comics are available for characters of Marvel.
 
-How to compile the project.
+### How to compile the project.
 
 For compile and executing project, open the project in Android Studio and add in file "local.properties" the next keys.
 
