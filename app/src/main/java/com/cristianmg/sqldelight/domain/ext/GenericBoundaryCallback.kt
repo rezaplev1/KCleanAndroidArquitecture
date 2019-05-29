@@ -24,6 +24,7 @@ import com.cristianmg.sqldelight.domain.model.NetworkState
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
@@ -42,10 +43,8 @@ class GenericBoundaryCallback<T>(
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
     private var offsetCount = 0
 
-
     fun refreshPage() {
         networkState.value = NetworkState.LOADING
-        compositeDisposable.add(
             getPage(0)
                 .subscribeOn(Schedulers.io())
                 .flatMapCompletable {
@@ -58,7 +57,7 @@ class GenericBoundaryCallback<T>(
                     onError = {
                         networkState.value = NetworkState.error(it.message)
                     }
-                ))
+                ).addTo(compositeDisposable)
     }
 
     /**
@@ -89,20 +88,21 @@ class GenericBoundaryCallback<T>(
 
     private fun getTop(offset: Int, pagingRequest: PagingRequestHelper.Request.Callback) {
         Timber.d("Request a new page $offset")
-        val throwable = getPage(offset)
+        offsetCount += networkPageSize
+        getPage(offset)
+            .subscribeOn(Schedulers.io())
             .flatMapCompletable {
                 insertAllItems(it)
-            }.blockingGet()
-
-        if (throwable != null) {
-            Timber.e("Error when getTop with page $offset and message error ${throwable.message}")
-            networkState.postValue(NetworkState.error(throwable.message))
-            pagingRequest.recordFailure(throwable)
-        } else {
-            pagingRequest.recordSuccess()
-            offsetCount += networkPageSize
-        }
-
+            }.subscribeBy(
+                onComplete = {
+                    pagingRequest.recordSuccess()
+                },
+                onError = {
+                    networkState.postValue(NetworkState.error(it.message))
+                    Timber.e(it, "Error when getTop with page $offset")
+                    pagingRequest.recordFailure(it)
+                }
+            ).addTo(compositeDisposable)
     }
 
 
@@ -111,7 +111,7 @@ class GenericBoundaryCallback<T>(
         compositeDisposable.clear()
     }
 
-    fun retryPetitions()  = helper.retryAllFailed()
+    fun retryPetitions() = helper.retryAllFailed()
 
 
 }
