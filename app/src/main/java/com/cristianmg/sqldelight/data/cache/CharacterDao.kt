@@ -34,11 +34,12 @@ interface CharacterDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(data: CharacterEntity): Completable
 
+    @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(list: List<CharacterEntity>): Completable
 
     @Query("""
-            SELECT * FROM character
+            SELECT * FROM character ORDER BY name ASC
             """)
     fun getAllPaged(): DataSource.Factory<Int, CharacterEntity>
 

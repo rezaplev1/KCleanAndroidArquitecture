@@ -18,14 +18,24 @@ package com.cristianmg.sqldelight.app.ext
 
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.BindingAdapter
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.cristianmg.sqldelight.R
 
 @BindingAdapter("imageUrl")
 fun loadImage(view: AppCompatImageView, url: String?) {
     url?.let {
-        Glide.with(view.context).load(url).into(view)
-    }?:run{
+
+        val circularProgressDrawable = CircularProgressDrawable(view.context)
+        circularProgressDrawable.strokeWidth = 5f
+        circularProgressDrawable.centerRadius = 30f
+        circularProgressDrawable.start()
+
+        Glide.with(view.context)
+            .load(url)
+            .placeholder(circularProgressDrawable)
+            .into(view)
+    } ?: run {
         view.setBackgroundResource(R.drawable.ic_error_image_not_found)
     }
 }

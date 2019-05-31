@@ -53,8 +53,9 @@ class CharacterListFragment : Fragment() {
     private fun initAdapter() {
         rvCharacters.layoutManager = layoutManager
         rvCharacters.adapter = adapter
+        rvCharacters.setHasFixedSize(true)
 
-        viewModel.characters()
+        viewModel.dataSource
             .observe(this, Observer {
                 adapter.submitList(it)
             })
@@ -65,11 +66,11 @@ class CharacterListFragment : Fragment() {
                 adapter.setNetworkState(it)
             })
 
-        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return if ((position == adapter.itemCount - 1) && adapter.hasExtraRow()) 3 else 1
-            }
-        }
+         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+              override fun getSpanSize(position: Int): Int {
+                  return if ((position == adapter.itemCount - 1) && adapter.hasExtraRow()) 3 else 1
+              }
+          }
 
 
     }

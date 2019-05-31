@@ -38,7 +38,7 @@ interface CharacterService {
         override fun characters(offset: Int, sizePage: Int): Single<List<CharacterEntity>> {
             val ts = apiInf.ts
             return retrofit.create(NetworkCalls::class.java)
-                .getCharacters(ts, apiInf.publicApiKey, apiInf.getHash(ts), offset, sizePage,"modified")
+                .getCharacters(ts, apiInf.publicApiKey, apiInf.getHash(ts), offset, sizePage,"name")
                 .subscribeOn(Schedulers.io())
                 .map { it.getDataOrError().results }
         }

@@ -52,18 +52,7 @@ class App : Application() {
         }
 
         if (BuildConfig.DEBUG) {
-            Timber.plant(object : Timber.DebugTree() {
-                override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
-                    Logger.log(priority, tag, message, t)
-                }
-            })
-
-            Logger.addLogAdapter(object : AndroidLogAdapter() {
-                override fun isLoggable(priority: Int, tag: String?): Boolean {
-                    return BuildConfig.DEBUG
-                }
-            })
-
+            Timber.plant(Timber.DebugTree())
         }
 
     }

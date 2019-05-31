@@ -16,6 +16,7 @@
 package com.cristianmg.sqldelight.data.entity
 
 import androidx.room.*
+import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
 
 
@@ -42,17 +43,11 @@ data class CharacterEntity(
     @SerializedName("thumbnail")
     val thumbnail: ThumbnailEntity,
 
-    @ColumnInfo(name = "resourceURI")
+    @ColumnInfo(name = "resource_uri")
     @SerializedName("resourceURI")
     val resourceURI: String,
 
-    @Ignore
+    @Embedded
     @SerializedName("comics")
-    val comics: ComicInfoEntity? = null
-) {
-
-    constructor(id: Long, name: String, modified: String, thumbnail: ThumbnailEntity, resourceURI: String)
-            : this(
-        id, name, modified, thumbnail, resourceURI, null
-    )
-}
+    val comics: ComicInfoEntity
+)

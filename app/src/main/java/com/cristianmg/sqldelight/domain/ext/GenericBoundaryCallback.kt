@@ -45,19 +45,19 @@ class GenericBoundaryCallback<T>(
 
     fun refreshPage() {
         networkState.value = NetworkState.LOADING
-            getPage(0)
-                .subscribeOn(Schedulers.io())
-                .flatMapCompletable {
-                    removeAllItems()
-                        .andThen(insertAllItems(it))
-                }.subscribeBy(
-                    onComplete = {
-                        networkState.postValue(NetworkState.LOADED)
-                    },
-                    onError = {
-                        networkState.value = NetworkState.error(it.message)
-                    }
-                ).addTo(compositeDisposable)
+        getPage(0)
+            .subscribeOn(Schedulers.io())
+            .flatMapCompletable {
+                removeAllItems()
+                    .andThen(insertAllItems(it))
+            }.subscribeBy(
+                onComplete = {
+                    networkState.postValue(NetworkState.LOADED)
+                },
+                onError = {
+                    networkState.value = NetworkState.error(it.message)
+                }
+            ).addTo(compositeDisposable)
     }
 
     /**
@@ -88,7 +88,6 @@ class GenericBoundaryCallback<T>(
 
     private fun getTop(offset: Int, pagingRequest: PagingRequestHelper.Request.Callback) {
         Timber.d("Request a new page $offset")
-        offsetCount += networkPageSize
         getPage(offset)
             .subscribeOn(Schedulers.io())
             .flatMapCompletable {
@@ -96,6 +95,7 @@ class GenericBoundaryCallback<T>(
             }.subscribeBy(
                 onComplete = {
                     pagingRequest.recordSuccess()
+                    offsetCount += networkPageSize
                 },
                 onError = {
                     networkState.postValue(NetworkState.error(it.message))

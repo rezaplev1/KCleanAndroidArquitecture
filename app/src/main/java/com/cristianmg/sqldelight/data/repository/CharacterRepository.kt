@@ -16,20 +16,25 @@
 
 package com.cristianmg.sqldelight.data.repository
 
-import androidx.paging.DataSource
+import androidx.paging.toLiveData
+import androidx.room.Transaction
 import com.cristianmg.sqldelight.data.cache.CharacterDao
 import com.cristianmg.sqldelight.data.mapper.CharacterMapper
 import com.cristianmg.sqldelight.domain.model.CharacterModel
 import com.cristianmg.sqldelight.data.service.CharacterService
+import com.cristianmg.sqldelight.domain.ext.GenericBoundaryCallback
+import com.cristianmg.sqldelight.domain.ext.liveData
+import com.cristianmg.sqldelight.domain.model.Listing
 import io.reactivex.Completable
 import io.reactivex.Single
 
+/**
+ * Character repository, for a clean architecture only methods
+ * that might be share between cache and service must be exposed by repository
+ * **/
 interface CharacterRepository {
 
-    fun character(offset: Int,pageSize:Int): Single<List<CharacterModel>>
-    fun insertAll(list: List<CharacterModel>): Completable
-    fun getDataSourceCharacters(): DataSource.Factory<Int, CharacterModel>
-    fun removeAll(): Completable
+    fun getListable(): Listing<CharacterModel>
 
     open class CharacterRepositoryImpl(
         private val service: CharacterService,
@@ -37,17 +42,42 @@ interface CharacterRepository {
         private val dao: CharacterDao
     ) : CharacterRepository {
 
-        override fun removeAll(): Completable = dao.deleteAll()
-
-        override fun getDataSourceCharacters(): DataSource.Factory<Int, CharacterModel> {
-            return dao.getAllPaged()
-                .map { mapper.mapToModel(it) }
+        companion object {
+            const val SIZE_PAGE = 30
         }
 
-        override fun insertAll(list: List<CharacterModel>): Completable =
-            dao.insertAll(mapper.mapListToEntity(list))
+        override fun getListable(): Listing<CharacterModel> {
+            return object : Listing<CharacterModel> {
 
-        override fun character(offset: Int,pageSize:Int): Single<List<CharacterModel>> =
+                /** Create the boundary callback **/
+                val bc: GenericBoundaryCallback<CharacterModel> by lazy {
+                    GenericBoundaryCallback(
+                        { dao.deleteAll() },
+                        { character(it, SIZE_PAGE) },
+                        { insertCharacters(it) },
+                        SIZE_PAGE
+                    )
+                }
+
+                override fun getDataSource() =
+                    dao.getAllPaged()
+                        .map { mapper.mapToModel(it) }
+                        .toLiveData(
+                            pageSize = SIZE_PAGE,
+                            boundaryCallback = bc
+                        )
+
+
+                override fun getBoundaryCallback() = liveData(bc)
+
+            }
+        }
+
+        fun insertCharacters(list:List<CharacterModel>):Completable{
+           return dao.insertAll(list.map { mapper.mapToEntity(it) })
+        }
+
+        fun character(offset: Int, pageSize: Int): Single<List<CharacterModel>> =
             service.characters(offset, pageSize)
                 .map {
                     mapper.mapListToModel(it)

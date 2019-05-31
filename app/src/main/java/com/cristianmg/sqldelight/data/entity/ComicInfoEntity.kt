@@ -16,29 +16,12 @@
 
 package com.cristianmg.sqldelight.data.entity
 
+import androidx.room.ColumnInfo
 import com.google.gson.annotations.SerializedName
 
 
-/*@Entity(
-    tableName = "comic_info",
-    foreignKeys = [ForeignKey(
-        entity = CharacterEntity::class,
-        parentColumns = ["id"],
-        childColumns = ["id"],
-        onDelete = CASCADE
-    )],
-    indices = [Index("id")]
-)*/
 data class ComicInfoEntity(
     @SerializedName("available")
-    val available: Int,
-    @SerializedName("collectionURI")
-    val collectionURI: String,
-    @SerializedName("items")
-    val items: List<InfoEntity>
-)
-
-data class InfoEntity(
-    val resourceURI: String,
-    val name: String
+    @ColumnInfo(name = "comics_available")
+    val comicsAvailable: Int
 )

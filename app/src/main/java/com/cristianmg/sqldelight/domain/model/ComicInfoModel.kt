@@ -16,7 +16,14 @@
 
 package com.cristianmg.sqldelight.domain.model
 
+
 data class ComicInfoModel(
-    val resourceURI:String,
-    val name:String
+    val available: Int,
+    val collectionURI: String,
+    val items: List<ItemInfoModel>
+)
+
+data class ItemInfoModel(
+    val resourceURI: String,
+    val name: String
 )

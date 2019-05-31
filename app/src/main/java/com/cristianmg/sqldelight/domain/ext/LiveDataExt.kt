@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package com.cristianmg.sqldelight.data.di
+package com.cristianmg.sqldelight.domain.ext
+
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 
 
-import com.cristianmg.sqldelight.data.mapper.CharacterMapper
-import org.koin.dsl.module
-
-val mapperModule = module {
-
-    single { CharacterMapper() }
-
+/***
+ * Create and initialize livedata
+ * */
+fun <T> liveData(data:T): LiveData<T> {
+    val mld = MutableLiveData<T>()
+    mld.value = data
+    return mld
 }

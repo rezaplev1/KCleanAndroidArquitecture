@@ -17,12 +17,13 @@
 package com.cristianmg.sqldelight.data.mapper
 
 import com.cristianmg.sqldelight.data.entity.CharacterEntity
+import com.cristianmg.sqldelight.data.entity.ComicInfoEntity
 import com.cristianmg.sqldelight.data.entity.ThumbnailEntity
 import com.cristianmg.sqldelight.data.ext.DateFormat
 import com.cristianmg.sqldelight.domain.model.CharacterModel
 import com.cristianmg.sqldelight.domain.model.ThumbnailModel
 
-class CharacterMapper : IMapper<CharacterEntity, CharacterModel> {
+class CharacterMapper() : IMapper<CharacterEntity, CharacterModel> {
 
     override fun mapToEntity(model: CharacterModel): CharacterEntity =
         CharacterEntity(
@@ -30,7 +31,8 @@ class CharacterMapper : IMapper<CharacterEntity, CharacterModel> {
             model.name,
             DateFormat.toNetworkFormat(model.modified),
             ThumbnailEntity(model.thumbnail.path, model.thumbnail.extension),
-            model.resourceURI
+            model.resourceURI,
+            ComicInfoEntity(model.comicsAvailable)
         )
 
     override fun mapToModel(entity: CharacterEntity): CharacterModel =
@@ -40,7 +42,7 @@ class CharacterMapper : IMapper<CharacterEntity, CharacterModel> {
             DateFormat.fromNetworkFormat(entity.modified),
             ThumbnailModel(entity.thumbnail.path, entity.thumbnail.extension),
             entity.resourceURI,
-            mutableListOf()
+            entity.comics.comicsAvailable
         )
 
 

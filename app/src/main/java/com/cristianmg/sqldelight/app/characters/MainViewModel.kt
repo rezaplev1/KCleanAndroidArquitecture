@@ -17,51 +17,39 @@
 package com.cristianmg.sqldelight.app.characters
 
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations.switchMap
 import androidx.lifecycle.ViewModel
-import androidx.paging.toLiveData
-import com.cristianmg.sqldelight.domain.ext.GenericBoundaryCallback
-import com.cristianmg.sqldelight.domain.model.CharacterModel
 import com.cristianmg.sqldelight.data.repository.CharacterRepository
-
+import com.cristianmg.sqldelight.domain.ext.liveData
+import com.cristianmg.sqldelight.domain.model.CharacterModel
+import com.cristianmg.sqldelight.domain.model.Listing
 
 class MainViewModel(
     private val characterRepository: CharacterRepository
 ) : ViewModel() {
 
-    companion object {
-        const val SIZE_PAGE = 20
+
+    private val listing: LiveData<Listing<CharacterModel>> by lazy {
+        liveData(characterRepository.getListable())
+    }
+
+    private val boundaryCallback = switchMap(listing) { it.getBoundaryCallback() }!!
+    val dataSource = switchMap(listing) { it.getDataSource() }!!
+    val networkState = switchMap(listing) { it.getNetworkState() }!!
+
+
+   /**
+    * Retry all failed petitions boundary callback
+    */
+   fun retry() {
+        boundaryCallback.value?.retryPetitions()
     }
 
     /**
-     * Make generic boundary callback
+     * Cleared all references and petitions boundary callback
      */
-    private val boundaryCallback: GenericBoundaryCallback<CharacterModel> by lazy {
-        GenericBoundaryCallback(
-            { characterRepository.removeAll() },
-            { characterRepository.character(it, SIZE_PAGE) },
-            { characterRepository.insertAll(it) },
-            SIZE_PAGE
-        )
+    override fun onCleared() {
+        boundaryCallback.value?.cleared()
     }
-
-
-    val networkState = boundaryCallback.networkState
-
-    /**
-     * Make data source create Character data source
-     */
-    fun characters() = characterRepository.getDataSourceCharacters()
-        .toLiveData(
-            pageSize = SIZE_PAGE,
-            boundaryCallback = boundaryCallback
-        )
-
-    //Inform to boundary callback of user press retry option
-    fun retry() =
-        boundaryCallback.retryPetitions()
-
-
-    override fun onCleared() =
-        boundaryCallback.cleared()
-
 }

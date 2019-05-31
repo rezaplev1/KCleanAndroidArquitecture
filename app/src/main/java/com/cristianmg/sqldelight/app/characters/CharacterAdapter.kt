@@ -44,10 +44,7 @@ class CharacterAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            R.layout.character_item -> CharacterViewHolder.create(
-                parent,
-                retryCallback
-            )
+            R.layout.character_item -> CharacterViewHolder.create(parent)
             R.layout.network_state_item -> NetworkStateItemViewHolder.create(
                 parent,
                 retryCallback
@@ -91,7 +88,7 @@ class CharacterAdapter(
     class CharacterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         companion object {
-            fun create(parent: ViewGroup, retryCallback: () -> Unit): CharacterViewHolder {
+            fun create(parent: ViewGroup): CharacterViewHolder {
                 val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.character_item, parent, false)
                 return CharacterViewHolder(view)
@@ -133,8 +130,10 @@ class CharacterAdapter(
     companion object {
 
         val POST_COMPARATOR = object : DiffUtil.ItemCallback<CharacterModel>() {
-            override fun areContentsTheSame(oldItem: CharacterModel, newItem: CharacterModel): Boolean =
-                oldItem == newItem
+
+            override fun areContentsTheSame(oldItem: CharacterModel, newItem: CharacterModel): Boolean {
+               return oldItem == newItem
+            }
 
             override fun areItemsTheSame(oldItem: CharacterModel, newItem: CharacterModel): Boolean =
                 oldItem.id == newItem.id

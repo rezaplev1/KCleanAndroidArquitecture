@@ -16,7 +16,6 @@
 
 package com.cristianmg.sqldelight.domain.model
 
-import com.cristianmg.sqldelight.data.entity.ComicInfoEntity
 import java.util.*
 
 data class CharacterModel(
@@ -25,5 +24,5 @@ data class CharacterModel(
     val modified: Calendar,
     val thumbnail: ThumbnailModel,
     val resourceURI: String,
-    val comics: List<ComicInfoEntity>
+    val comicsAvailable: Int
 )
