@@ -47,7 +47,7 @@ class CompletableExtTest {
 
     @Test
     fun resultFailureTest() {
-        Completable.error(IllegalStateException())
+        Completable.error(IllegalStateException("resultFailureTest"))
             .toResult(Schedulers.io())
             .test()
             .await()

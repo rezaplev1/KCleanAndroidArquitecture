@@ -16,7 +16,6 @@
 package com.cristianmg.sqldelight.data.entity
 
 import androidx.room.*
-import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
 
 
@@ -50,4 +49,5 @@ data class CharacterEntity(
     @Embedded
     @SerializedName("comics")
     val comics: ComicInfoEntity
+
 )

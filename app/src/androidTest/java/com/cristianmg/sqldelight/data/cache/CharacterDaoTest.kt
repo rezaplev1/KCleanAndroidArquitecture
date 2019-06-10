@@ -17,6 +17,7 @@
 package com.cristianmg.sqldelight.data.cache
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.cristianmg.sqldelight.data.entity.CharacterEntity
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -30,12 +31,14 @@ class CharacterDaoTest : KoinTest {
 
     @Before
     fun before() {
+        //CharacterEntity("id","",)
         //loadKoinModules(cacheModule)
     }
 
 
     @Test
     fun testTest() {
+        //CharacterEntity.cre
         dao.characters().test().assertComplete()
     }
 
