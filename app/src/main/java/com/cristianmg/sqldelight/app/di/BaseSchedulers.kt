@@ -16,16 +16,19 @@
 
 package com.cristianmg.sqldelight.app.di
 
-import com.cristianmg.sqldelight.domain.di.DomainKoinModules
-import org.koin.core.module.Module
+import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
-class AppKoinModules {
+interface BaseSchedulers {
 
-    companion object {
-        fun getModules(): List<Module> {
-            return mutableListOf(appModule).apply {
-                addAll(DomainKoinModules.getModules())
-            }
-        }
+    fun ui(): Scheduler
+    fun io(): Scheduler
+    fun computation(): Scheduler
+
+    class BaseSchedulersImpl() : BaseSchedulers {
+        override fun ui() = AndroidSchedulers.mainThread()
+        override fun io() = Schedulers.io()
+        override fun computation() = Schedulers.computation()
     }
 }

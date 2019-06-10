@@ -14,24 +14,20 @@
  * limitations under the License.
  */
 
-package com.cristianmg.sqldelight.data
-
+package com.cristianmg.sqldelight.data.mapper
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.cristianmg.sqldelight.data.mockwebserver.MockWebServerRule
 import com.cristianmg.sqldelight.data.service.CharacterService
+import com.cristianmg.sqldelight.data.service.mockwebserver.MockWebServerRule
 import com.cristianmg.sqldelight.di.TestKoinModules
+import org.junit.Assert
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.koin.test.inject
-import org.junit.Before
 import org.koin.core.context.startKoin
 import org.koin.test.AutoCloseKoinTest
+import org.koin.test.inject
 
-
-/**
- * This test are for testing de CharacterService
- * **/
 class CharacterServiceTest : AutoCloseKoinTest() {
 
     @get:Rule
@@ -39,6 +35,8 @@ class CharacterServiceTest : AutoCloseKoinTest() {
 
     @get:Rule
     var mockWebServer = MockWebServerRule()
+
+    private val mapper: CharacterMapper  by inject()
 
     private val service: CharacterService by inject()
 
@@ -50,13 +48,15 @@ class CharacterServiceTest : AutoCloseKoinTest() {
     }
 
     @Test
-    fun charactersTest() {
+    fun mapperTest() {
 
-        service.characters(0, 3)
-            .test()
-            .await()
-            .assertValue { it.size == 3 }
+        val entity = service.characters(0, 1)
+            .blockingGet()
+            .first()
 
+        val entityParsed = mapper.mapToEntity(mapper.mapToModel(entity))
+
+        Assert.assertEquals(entity, entityParsed)
     }
 
 

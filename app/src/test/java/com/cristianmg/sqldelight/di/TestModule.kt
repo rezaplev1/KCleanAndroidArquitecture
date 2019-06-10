@@ -16,27 +16,26 @@
 
 package com.cristianmg.sqldelight.di
 
-
-import com.cristianmg.sqldelight.app.di.AppKoinModules
 import com.cristianmg.sqldelight.data.service.mockwebserver.MockWebServerRule
-import io.reactivex.internal.util.BackpressureHelper.add
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.koin.core.module.Module
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
-class TestKoinModules {
+val testModule = module {
+    single<Retrofit>(override = true) {
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
+        val client = OkHttpClient.Builder().addInterceptor(interceptor)
+            .build()
 
-    companion object {
-        fun getModules(): List<Module> {
-            return AppKoinModules.getModules()
-                .toMutableList()
-                .apply {
-                    add(testModule)
-                }
-        }
+        Retrofit.Builder()
+            .baseUrl(MockWebServerRule.MOCK_WEB_SERVER_URL)
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .build()
     }
 }

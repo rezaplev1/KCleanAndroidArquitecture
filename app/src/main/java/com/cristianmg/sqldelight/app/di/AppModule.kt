@@ -16,16 +16,8 @@
 
 package com.cristianmg.sqldelight.app.di
 
-import com.cristianmg.sqldelight.domain.di.DomainKoinModules
-import org.koin.core.module.Module
+import org.koin.dsl.module
 
-class AppKoinModules {
-
-    companion object {
-        fun getModules(): List<Module> {
-            return mutableListOf(appModule).apply {
-                addAll(DomainKoinModules.getModules())
-            }
-        }
-    }
+val appModule = module {
+    single<BaseSchedulers> { BaseSchedulers.BaseSchedulersImpl() }
 }

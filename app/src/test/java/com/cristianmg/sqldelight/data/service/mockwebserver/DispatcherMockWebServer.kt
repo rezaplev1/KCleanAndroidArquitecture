@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cristianmg.sqldelight.data.mockwebserver
+package com.cristianmg.sqldelight.data.service.mockwebserver
 
 import com.cristianmg.sqldelight.data.getJson
 import com.cristianmg.sqldelight.data.service.CharacterService
@@ -30,18 +30,7 @@ class DispatcherMockWebServer : Dispatcher() {
 
         return when (requestUrl.encodedPath()) {
             "/v1/public/characters" -> {
-
-                val limit = requestUrl.queryParameter("limit")
-                val offset = requestUrl.queryParameter("offset")
-
-                val jsonArray = JsonParser().parse(
-                    getJson(
-                        "characters/character_page.json",
-                        CharacterService::class
-                    )
-                ).asJsonObject
-
-               return MockResponse()
+                MockResponse()
                     .setResponseCode(200)
                     .setBody(
                         getJson(

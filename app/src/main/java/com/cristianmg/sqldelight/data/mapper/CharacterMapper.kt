@@ -23,13 +23,13 @@ import com.cristianmg.sqldelight.data.ext.DateFormat
 import com.cristianmg.sqldelight.domain.model.CharacterModel
 import com.cristianmg.sqldelight.domain.model.ThumbnailModel
 
-class CharacterMapper() : IMapper<CharacterEntity, CharacterModel> {
+class CharacterMapper : IMapper<CharacterEntity, CharacterModel> {
 
     override fun mapToEntity(model: CharacterModel): CharacterEntity =
         CharacterEntity(
             model.id,
             model.name,
-            DateFormat.toNetworkFormat(model.modified),
+            DateFormat.toGmtFormat(model.modified),
             ThumbnailEntity(model.thumbnail.path, model.thumbnail.extension),
             model.resourceURI,
             ComicInfoEntity(model.comicsAvailable)
@@ -39,7 +39,7 @@ class CharacterMapper() : IMapper<CharacterEntity, CharacterModel> {
         CharacterModel(
             entity.id,
             entity.name,
-            DateFormat.fromNetworkFormat(entity.modified),
+            DateFormat.toLocaleFormat(entity.modified),
             ThumbnailModel(entity.thumbnail.path, entity.thumbnail.extension),
             entity.resourceURI,
             entity.comics.comicsAvailable

@@ -16,12 +16,12 @@
 
 package com.cristianmg.sqldelight.data.service
 
+import com.cristianmg.sqldelight.app.di.BaseSchedulers
 import com.cristianmg.sqldelight.data.entity.MarvelApiInformationEntity
 import com.cristianmg.sqldelight.data.entity.MarvelPaginateDataEntity
 import com.cristianmg.sqldelight.data.entity.MarvelResponseEntity
 import com.cristianmg.sqldelight.data.entity.CharacterEntity
 import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
 import retrofit2.http.GET
 import retrofit2.Retrofit
 import retrofit2.http.Query
@@ -32,14 +32,15 @@ interface CharacterService {
 
     class Network(
         private val apiInf: MarvelApiInformationEntity,
-        private val retrofit: Retrofit
+        private val retrofit: Retrofit,
+        private val schedulers: BaseSchedulers
     ) : CharacterService {
 
         override fun characters(offset: Int, sizePage: Int): Single<List<CharacterEntity>> {
             val ts = apiInf.ts
             return retrofit.create(NetworkCalls::class.java)
                 .getCharacters(ts, apiInf.publicApiKey, apiInf.getHash(ts), offset, sizePage,"name")
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(schedulers.io())
                 .map { it.getDataOrError().results }
         }
 

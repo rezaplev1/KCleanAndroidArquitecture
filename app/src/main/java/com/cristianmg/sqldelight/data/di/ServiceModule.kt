@@ -28,7 +28,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 val serviceModule = module {
 
-    single<CharacterService> { CharacterService.Network(get(), get()) }
+    single<CharacterService> { CharacterService.Network(get(), get(),get()) }
 
     single {
         val privateApiKey = BuildConfig.PRIVATE_API_KEY_MARVEL

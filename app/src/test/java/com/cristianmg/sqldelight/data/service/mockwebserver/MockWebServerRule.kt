@@ -14,17 +14,12 @@
  * limitations under the License.
  */
 
-package com.cristianmg.sqldelight.data.mockwebserver
+package com.cristianmg.sqldelight.data.service.mockwebserver
 
-import com.cristianmg.sqldelight.data.getJson
-import com.cristianmg.sqldelight.data.service.CharacterService
-import okhttp3.mockwebserver.Dispatcher
-import okhttp3.mockwebserver.MockResponse
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
 import okhttp3.mockwebserver.MockWebServer
-import okhttp3.mockwebserver.RecordedRequest
 import timber.log.Timber
 import java.io.IOException
 import java.lang.Exception
@@ -62,27 +57,7 @@ class MockWebServerRule : TestRule {
         mServer = MockWebServer()
         try {
             mServer.start(MOCK_WEBSERVER_PORT)
-
-            mServer.dispatcher = object : Dispatcher() {
-                override fun dispatch(request: RecordedRequest): MockResponse {
-                    val path = request.requestUrl.encodedPath()
-                    return when (path) {
-                        "/v1/public/characters" ->
-                            MockResponse()
-                                .setResponseCode(200)
-                                .setBody(
-                                    getJson(
-                                        "characters/character_page.json",
-                                        CharacterService::class
-                                    )
-                                )
-                        else -> MockResponse().setResponseCode(404)
-                    }
-
-                }
-            }
-
-
+            mServer.dispatcher = DispatcherMockWebServer()
         } catch (e: Exception) {
             Timber.e(e, "mock server start issue")
         }
